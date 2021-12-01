@@ -1,0 +1,34 @@
+Used terminal command:
+cellprofiler -c -r -p democellprofiler.cpproj -o results_headless
+
+
+Env:conda activate cellprofiler
+
+https://github.com/CellProfiler/CellProfiler/wiki/Source-installation-(OS-X-and-macOS)
+
+
+
+
+Additional information
+From : https://carpenter-singh-lab.broadinstitute.org/blog/getting-started-using-cellprofiler-command-line
+
+
+Required components  
+cellprofiler -c -r -p /path/to/pipeline/file.cppipe -o /path/where/the/output/goes
+Let's break each one of these down:
+cellprofiler : If you've installed CellProfiler from source, rather than downloading it prebuilt from our website, just typing cellprofiler is how you'll call it from the terminal. If NOT, this needs to be the path to your existing CellProfiler executable, which for a PC will look something like C:\Users\UserName\ProgramFiles\CellProfiler\CellProfiler.exe , and for a Mac will look something like /Applications/CellProfiler/Contents/MacOS/cp . You can drag and drop the executable into your terminal window, which is typically easier than typing it out.
+-c -r : Flags you need to use to run CellProfiler headless. See Adapting CellProfiler to a LIMS environment for more information.
+-p : Your pipeline file (or batch file created with the CreateBatchFiles module) you want to execute
+-o : Where your output should go.
+
+Input component  
+Your input component can be one of a few different things — or might be omitted entirely, if you're using a batch file.
+-i : Specifies the Default Input Directory (if any modules in your pipeline are using files you've told it will be in the Default Input Directory). Unless using a batch file, CellProfiler will additionally scan all the files in this folder and try to make them into image sets for your pipeline - great if you don't want to otherwise specify input sets with one of the methods below, but be warned it can be very slow if you point it at a huge directory!
+--data-file : A CSV designed to work with the LoadData module (See module help for more details).
+--file-list : A list of files, one per line, that should be loaded by the Images module and then analyzed by CellProfiler.
+Optional grouping component  
+If you want to break your CellProfiler job up (to run in stages, or across many machines, or many terminal windows on the same machine), you may want to add a grouping component to your command. There are two major ways this can work:
+-g : If the "Groups" module of your pipeline is turned on, you can use the grouping variables specified there to set which group this copy of CellProfiler should process — i.e., if your pipeline is set up to group by Well, you might use -g Well=A01
+-f -l : If you aren't grouping, or simply don't want to break your data that way, you can tell CellProfiler the first and last image set number to process — i.e., to run image sets 1-5 you'd add -f 1 -l 5 to your command
+Put it all together:  
+cellprofiler -c -r -p /path/to/pipeline/file.cppipe -o /path/where/the/output/goes -i /path/with/input/files -g Well=A01
